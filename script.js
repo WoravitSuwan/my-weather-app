@@ -1,50 +1,72 @@
-const apiKey = 'e1a6c05373adf8b0a9f8b334cc0bd645';
+    const apiKey = 'e1a6c05373adf8b0a9f8b334cc0bd645';
+    const form = document.getElementById('search-form');
+    const cityInput = document.getElementById('city-input');
+    const weatherContainer = document.getElementById('weather-info-container');
+    const forecastContainer = document.getElementById('forecast-container');
 
-const searchForm = document.querySelector('#search-form');
-const cityInput = document.querySelector('#city-input');
-const weatherInfoContainer = document.querySelector('#weather-info-container');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const city = cityInput.value.trim();
+      if (!city) return alert('กรุณาป้อนชื่อเมือง');
 
+      weatherContainer.innerHTML = `<p>⏳ กำลังโหลดข้อมูล...</p>`;
+      forecastContainer.innerHTML = '';
 
-searchForm.addEventListener('submit', (event) => {
-    event.preventDefault();
+      try {
+        const geoRes = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(city)}&limit=1&appid=${apiKey}`);
+        const geoData = await geoRes.json();
+        if (!geoData.length) throw new Error('ไม่พบชื่อเมืองนี้');
 
-    const cityName = cityInput.value.trim();
+        const { lat, lon, name } = geoData[0];
 
-    if (cityName) {
-        getWeather(cityName);
-    } else {
-        alert('กรุณาป้อนชื่อเมือง');
-    }
-});
+        const currentRes = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=th`);
+        const currentData = await currentRes.json();
 
+        const forecastRes = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric&lang=th`);
+        const forecastData = await forecastRes.json();
 
-async function getWeather(city) {
-    weatherInfoContainer.innerHTML = `<p>กำลังโหลดข้อมูล...</p>`;
-    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=th`;
+        displayCurrent(name, currentData);
+        displayForecast(forecastData.list);
+      } catch (err) {
+        weatherContainer.innerHTML = `<p class="error">❌ ${err.message}</p>`;
+      }
+    });
 
-    try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) {
-            throw new Error('ไม่พบข้อมูลเมืองนี้');
-        }
-        const data = await response.json();
-        displayWeather(data);
-    } catch (error) {
-        weatherInfoContainer.innerHTML = `<p class="error">${error.message}</p>`;
-    }
-}
+    function displayCurrent(city, data) {
+      const { temp, humidity } = data.main;
+      const { description, icon } = data.weather[0];
 
-function displayWeather(data) {
-    const { name, main, weather } = data;
-    const { temp, humidity } = main;
-    const { description, icon } = weather[0];
-
-    const weatherHtml = `
-        <h2 class="text-2xl font-bold">${name}</h2>
+      weatherContainer.innerHTML = `
+        <h2>${city}</h2>
         <img src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="${description}">
         <p class="temp">${temp.toFixed(1)}°C</p>
         <p>${description}</p>
-        <p>ความชื้น: ${humidity}%</p>
-    `;
-    weatherInfoContainer.innerHTML = weatherHtml;
-}
+        <p>💧 ความชื้น: ${humidity}%</p>
+      `;
+    }
+
+    function displayForecast(list) {
+      const dailyMap = new Map();
+
+      list.forEach(item => {
+        const date = item.dt_txt.split(' ')[0];
+        if (!dailyMap.has(date) && item.dt_txt.includes('12:00:00')) {
+          dailyMap.set(date, item);
+        }
+      });
+
+      let html = '';
+      Array.from(dailyMap.entries()).slice(0, 5).forEach(([date, item]) => {
+        const day = new Date(date).toLocaleDateString('th-TH', { weekday: 'short', day: 'numeric', month: 'numeric' });
+        html += `
+          <div class="forecast-card">
+            <h3>${day}</h3>
+            <img src="https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png" alt="${item.weather[0].description}">
+            <p class="temp">${item.main.temp.toFixed(1)}°C</p>
+            <p>${item.weather[0].description}</p>
+          </div>
+        `;
+      });
+
+      forecastContainer.innerHTML = html;
+    }

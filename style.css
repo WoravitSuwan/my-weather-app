@@ -1,35 +1,180 @@
+:root {
+  --bg: #fef8f2;
+  --card-bg: #f5e9dc;
+  --accent: #8b5e3c;
+  --accent-light: #e0c8b0;
+  --text: #5c4330;
+  --text-sub: #866;
+  --radius: 1rem;
+  --shadow: 0 8px 24px rgba(139, 94, 60, 0.1);
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
-    background: #051923;
-    color: #E0E1DD;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
+  background-color: var(--bg);
+  font-family: var(--font);
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
-.app-container {
-    background: #003554;
-    padding: 2rem;
-    border-radius: 1rem;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    width: 90%;
-    max-width: 400px;
-    text-align: center;
+
+.app {
+  padding: 2rem;
+  width: 100%;
+  max-width: 420px;
 }
-h1 { color: #00A6FB; }
-#search-form { display: flex; gap: 0.5rem; margin: 1.5rem 0; }
-#city-input {
-    flex-grow: 1; padding: 0.75rem; border: 1px solid #006494;
-    border-radius: 0.5rem; background: #051923; color: #E0E1DD;
-    font-size: 1rem;
+
+.card {
+  background-color: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--accent-light);
+  padding: 2rem;
 }
-#search-form button {
-    padding: 0.75rem 1rem; background-color: #00A6FB; color: #051923;
-    border: none; border-radius: 0.5rem; font-size: 1rem; font-weight: bold;
-    cursor: pointer; transition: background-color 0.2s;
+
+.title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
-#search-form button:hover { background-color: #0582CA; }
-.weather-info { margin-top: 1.5rem; min-height: 150px; }
-.weather-info .temp { font-size: 3rem; font-weight: bold; margin: 0.5rem 0; }
-.error { color: #ff4d4d; font-weight: bold; }
+
+.form {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--accent-light);
+  font-size: 1rem;
+  background: #fff;
+  color: var(--text);
+}
+.form input:focus {
+  border-color: var(--accent);
+  outline: none;
+}
+
+.form button {
+  background-color: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.form button:hover {
+  background-color: #6e4026;
+}
+
+.weather {
+  text-align: center;
+  min-height: 150px;
+}
+.weather img {
+  width: 80px;
+  margin: 1rem 0 0.5rem;
+}
+.weather h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+  color: var(--accent);
+}
+.weather .temp {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0.25rem 0;
+}
+.weather p {
+  font-size: 1rem;
+  color: var(--text-sub);
+  margin: 0.25rem 0;
+}
+
+.forecast {
+  margin-top: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 1rem;
+}
+.forecast-card {
+  background: #fff;
+  border-radius: var(--radius);
+  padding: 1rem;
+  text-align: center;
+  border: 1px solid var(--accent-light);
+}
+.forecast-card h3 {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--accent);
+}
+.forecast-card img {
+  width: 50px;
+  margin-bottom: 0.5rem;
+}
+.forecast-card .temp {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: var(--text);
+}
+.forecast-card p {
+  font-size: 0.9rem;
+  color: var(--text-sub);
+}
+
+.error {
+  color: #c0392b;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+.forecast {
+  margin-top: 1.5rem;
+  display: flex;             /* เปลี่ยนจาก grid เป็น flex */
+  gap: 1rem;
+  overflow-x: auto;          /* เปิดให้เลื่อนแนวนอน */
+  padding: 1rem;
+  border: 1px solid var(--accent-light);  /* กรอบรอบ forecast */
+  border-radius: var(--radius);
+  background: #fff;
+  scroll-behavior: smooth;   /* เลื่อนเนียน */
+}
+
+.forecast::-webkit-scrollbar {
+  height: 8px;
+}
+
+.forecast::-webkit-scrollbar-track {
+  background: #f5e9dc;
+  border-radius: var(--radius);
+}
+
+.forecast::-webkit-scrollbar-thumb {
+  background: var(--accent-light);
+  border-radius: var(--radius);
+}
+
+.forecast-card {
+  flex: 0 0 auto;            /* ห้ามยืดขยาย */
+  width: 90px;
+  border: none;              /* ลบเส้นขอบ เพราะมีกรอบจาก .forecast แล้ว */
+  box-shadow: var(--shadow); /* เงาเพื่อแยกบัตรแต่ละใบ */
+  background: var(--card-bg);
+}

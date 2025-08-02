@@ -1,22 +1,33 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather App</title>
-    <link rel="stylesheet" href="style.css">
-    <script defer src="script.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather App</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <div class="app-container">
-        <h1>Weather App</h1>
-        <form id="search-form">
-            <input type="text" id="city-input" placeholder="ค้นหาชื่อเมือง..." required>
-            <button type="submit">ค้นหา</button>
-        </form>
-        <div id="weather-info-container" class="weather-info">
-            <!-- ข้อมูลสภาพอากาศจะแสดงที่นี่ -->
-        </div>
-    </div>
+  <main class="app">
+    <section class="card">
+      <h1 class="title">Weather App</h1>
+
+      <form id="search-form" class="form">
+        <input type="text" id="city-input" placeholder="ค้นหาเมือง..." required />
+        <button type="submit">🔍</button>
+      </form>
+
+      <div id="weather-info-container" class="weather">
+        <!-- ข้อมูลปัจจุบันจะแสดงที่นี่ -->
+      </div>
+
+      <h3 style="margin-top: 2rem; color: var(--accent); text-align: center;">พยากรณ์อากาศล่วงหน้า 5 วัน</h3>
+      <div id="forecast-container" class="forecast">
+        <!-- พยากรณ์ล่วงหน้า -->
+      </div>
+    </section>
+     <script defer src="script.js"></script>
+  </main>
+
+
 </body>
 </html>
